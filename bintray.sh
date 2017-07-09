@@ -11,7 +11,7 @@ cmdExists() {
   command -v $1 >/dev/null 2>/dev/null;
   c=$?
   set -e
-  return c;
+  return $c;
 }
 
 getReadLink() {
