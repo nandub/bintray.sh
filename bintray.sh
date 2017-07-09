@@ -7,8 +7,11 @@ set -e
 
 # return true if the input command exists in $PATH
 cmdExists() {
+  set +e
   command -v $1 >/dev/null 2>/dev/null;
-  return $?;
+  c=$?
+  set -e
+  return c;
 }
 
 getReadLink() {
