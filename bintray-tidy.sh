@@ -4,16 +4,12 @@
 # Note: There is no official quota for open source projects on Bintray, but
 # they will suspend the account if they think you are taking advantage.
 
-set -e # exit on error - don't want to accidently delete the wrong version!
 [ -n "$DEBUG" ] && set -x
 
 # return true if the input command exists in $PATH
 cmdExists() {
-  set +e
   command -v $1 >/dev/null 2>/dev/null;
-  c=$?
-  set -e
-  return $c;
+  return $?;
 }
 
 getReadLink() {

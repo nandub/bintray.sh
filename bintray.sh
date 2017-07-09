@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -e
 [ -n "$DEBUG" ] && set -x
 
 # Push AppImages and related metadata to Bintray
@@ -7,11 +6,8 @@ set -e
 
 # return true if the input command exists in $PATH
 cmdExists() {
-  set +e
   command -v $1 >/dev/null 2>/dev/null;
-  c=$?
-  set -e
-  return $c;
+  return $?;
 }
 
 getReadLink() {
@@ -75,7 +71,6 @@ cd () {
 
 # https://bintray.com/docs/api/
 
-set -e # Exit on errors
 trap 'exit 1' ERR
 
 API=https://api.bintray.com
