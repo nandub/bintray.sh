@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # bintray-tidy.sh - delete old versions from a package hosted on Bintray.
 #
 # Note: There is no official quota for open source projects on Bintray, but

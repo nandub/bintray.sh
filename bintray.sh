@@ -126,36 +126,46 @@ if (( EUID != 0 )); then
   SUDO='sudo'
 fi
 
-if [ -e /usr/bin/apt-get ] ; then
-  $SUDO apt-get update >/dev/null
+install_with_apt() {
   $SUDO apt-get -y install curl bsdtar zsync
-fi
+}
 
-if [ -e /usr/bin/yum ] ; then
+install_with_yum() {
   $SUDO yum install -y curl bsdtar zsync
-fi
+}
 
-if [ -e /usr/bin/pacman ] ; then
+install_with_pacman() {
   builddeps=('curl' 'libarchive' 'zsync')
   for i in "${builddeps[@]}"; do
     if ! pacman -Q "$i" >/dev/null; then
       $SUDO pacman -S "$i"
     fi
   done
-fi
+}
 
-if [ -e /usr/bin/zypper ] ; then
+install_with_zypper() {
   $SUDO zypper install -y curl bsdtar zsync
-fi
+}
 
-if [ -e /usr/local/bin/brew ] ; then
+install_with_brew() {
   brew install curl coreutils zsync #Mac comes with bsdtar
-fi
+}
 
-which curl >/dev/null || exit 1
-which bsdtar >/dev/null || exit 1 # https://github.com/libarchive/libarchive/wiki/ManPageBsdtar1 ; isoinfo cannot read zisofs
-which grep >/dev/null || exit 1
-which zsyncmake >/dev/null || exit 1
+getpm() {
+  for p in 'yum' 'zypper' 'brew' 'pacman' 'apt'
+  do
+    cmdExists $p
+    if [ $? = 0 -o -f "$p" ]; then
+      prog=install_with_$p
+      break
+    fi
+  done
+}
+getpm
+which curl >/dev/null || $prog
+which bsdtar >/dev/null || $prog # https://github.com/libarchive/libarchive/wiki/ManPageBsdtar1 ; isoinfo cannot read zisofs
+which grep >/dev/null || $prog
+which zsyncmake >/dev/null || $prog
 
 # Do not upload artefacts generated as part of a pull request
 if [ ! -z "$TRAVIS_PULL_REQUEST" ] ; then
