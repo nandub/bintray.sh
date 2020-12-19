@@ -127,7 +127,8 @@ if (( EUID != 0 )); then
 fi
 
 install_with_apt() {
-  $SUDO apt-get -y install curl bsdtar zsync
+  $SUDO apt update >/dev/null
+  $SUDO apt -y install curl bsdtar zsync
 }
 
 install_with_yum() {
